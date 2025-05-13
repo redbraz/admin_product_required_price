@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+  <name><![CDATA[Admin Require Price]]></name>
+  <code><![CDATA[prai-admin-require-price]]></code>
+	<version><![CDATA[1.0]]></version>
+	<author><![CDATA[PRAI]]></author>
+	<link><![CDATA[https://www.agenciaprai.com/]]></link>
+
+	<file path="admin/controller/catalog/product.php">
+		<operation>
+			<search><![CDATA[protected function getForm() {]]></search>
+			<add position="after"><![CDATA[
+				if (isset($this->error['price'])) {
+					$data['error_price'] = $this->error['price'];
+				} else {
+					$data['error_price'] = '';
+				}
+			]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA[protected function validateForm() {]]></search>
+			<add position="after"><![CDATA[
+	    	if ((utf8_strlen($this->request->post['price']) < 1) || (($this->request->post['price']) <= 0)) {
+					$this->error['price'] = $this->language->get('error_price');
+				}
+			]]></add>
+		</operation>
+	</file>
+	<file path="admin/language/en-gb/catalog/product.php">
+		<operation>
+			<search><![CDATA[// Error]]></search>
+			<add position="after"><![CDATA[
+				$_['error_price']            = 'Price must be a numerical value greater than 0!';
+			]]></add>
+		</operation>
+	</file>
+	<file path="admin/language/pt-br/catalog/product.php">
+		<operation>
+			<search><![CDATA[// Error]]></search>
+			<add position="after"><![CDATA[
+				$_['error_price']            = 'O preço não pode ser vazio ou 0 deve ser um valor numérico maior que 0!';
+			]]></add>
+		</operation>
+	</file>
+	<file path="admin/view/template/catalog/product_form.twig">
+		<operation>
+			<search><![CDATA[
+			<input type="text" name="price" value="{{ price }}" placeholder="{{ entry_price }}" id="input-price" class="form-control"/>
+			]]></search>
+			<add position="replace"><![CDATA[
+				<input type="text" name="price" value="{{ price }}" placeholder="{{ entry_price }}" id="input-price" class="form-control"/>
+				{% if error_price %}
+				<span class="text-danger">{{ error_price }}</span>
+				{% endif %}
+			]]></add>
+		</operation>
+	</file>
+
+</modification>
